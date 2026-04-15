@@ -41,7 +41,7 @@ func (s *Streamer) enqueueCommand(cmd wsCommand) error {
 // It returns an error if the internal command queue is full.
 func (s *Streamer) Subscribe(tickers ...string) error {
 	if len(tickers) == 0 {
-		return nil
+		return errors.New("no tickers provided")
 	}
 	return s.enqueueCommand(wsCommand{
 		kind:    wsSubscribe,
