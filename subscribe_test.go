@@ -125,7 +125,7 @@ func TestHandleServerResponse(t *testing.T) {
 			t.Errorf("expected 0 subscriptions after error response, got %d", len(subscriptions))
 		}
 		select {
-		case errMsg := <-s.errChan:
+		case errMsg := <-s.Errors():
 			if !strings.Contains(errMsg.Error(), "server rejected subscribe") {
 				t.Errorf("unexpected error message: %v", errMsg)
 			}
@@ -138,5 +138,10 @@ func TestHandleServerResponse(t *testing.T) {
 		s := NewStreamer("")
 		// No panic, just ignored
 		s.handleServerResponse(100500, map[string]any{"result": nil, "id": 100500})
+		select {
+		case errMsg := <-s.Errors():
+			t.Errorf("unexpected error message for unknown id: %v", errMsg)
+		default:
+		}
 	})
 }
